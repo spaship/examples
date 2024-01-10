@@ -1,0 +1,62 @@
+name: Lighthouse Audit
+
+on:
+  push:
+    branches:
+      - '*'
+    tags:
+      - '*'
+    paths:
+      - '*'
+  workflow_dispatch:
+    inputs:
+      version:
+        description: Bump Version
+        default: v1.0.0
+        required: true
+
+jobs:
+  lighthouse:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v2
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v2
+        with:
+          node-version: '20'
+
+      - name: Install Dependencies
+        run: npm install -g lighthouse
+
+      - name: Run Lighthouse
+        run: |
+          lighthouse --no-enable-error-reporting --chrome-flags="--headless --disable-gpu" https://www.npmjs.com/package/@spotify/lighthouse-audit-service --output json html --output-path=./.lighthouseci/one-platform-test-env
+
+
+      - name: Commit Lighthouse Reports
+        uses: actions/github-script@v7
+        with:
+          github-token: ${{ secrets.GIT_TOKEN }}
+          script: |
+            const fs = require('fs');
+            const path = require('path');
+
+            // Import GitHub context
+            const github = require('@actions/github');
+
+            // Read the contents of the reports directory
+            const reportsPath = '.lighthouseci';
+            const reports = fs.readdirSync(reportsPath);
+
+            // Commit the reports to the repository
+            const { data } = await github.rest.repos.createOrUpdateFile({
+              owner: github.context.repo.owner,
+              repo: github.context.repo.repo,
+              path: 'lighthouse-reports',
+              message: 'Add Lighthouse Reports',
+              content: Buffer.from(reports.join('\n')).toString('base64'),
+            });
+
+            console.log(`Lighthouse reports committed. SHA: ${data.content.sha}`);
