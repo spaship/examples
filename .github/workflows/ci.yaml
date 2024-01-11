@@ -18,7 +18,7 @@ jobs:
   push_to_registry:
     name: Push Docker image to Registries
     env:
-      IMAGE_NAME: "workflow"
+      IMAGE_NAME: ${{ secrets.IMAGE_NAME }}
       REGISTRY_NAMESPACE: ${{ secrets.REGISTRY_NAMESPACE }}
       USERGROUP: ${{ secrets.USER_GROUP }}
     runs-on: ubuntu-latest
