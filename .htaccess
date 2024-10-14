@@ -45,11 +45,12 @@ Header set Cache-Control "max-age=3600, s-max-age=3600, public,  no-cache"
 # Ensure .mjs files are served with the correct MIME type
 <IfModule mod_mime.c>
     AddType application/javascript .mjs
+    AddType application/javascript .js
 </IfModule>
 
-# Set Content-Type header specifically for .mjs files
+# Set Content-Type header specifically for .js and .mjs files
 <IfModule mod_headers.c>
-    <FilesMatch "\.mjs$">
+    <FilesMatch "\.(js|mjs)$">
         Header set Content-Type "application/javascript"
     </FilesMatch>
 </IfModule>
