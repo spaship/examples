@@ -1,3 +1,15 @@
+# Ensure .mjs files are served with the correct MIME type
+<IfModule mod_mime.c>
+    AddType application/javascript .mjs
+</IfModule>
+
+# Set Content-Type header specifically for .mjs files
+<IfModule mod_headers.c>
+    <FilesMatch "\.mjs$">
+        Header set Content-Type "application/javascript"
+    </FilesMatch>
+</IfModule>
+
 <IfModule mod_rewrite.c>
     RewriteEngine On
     RewriteCond %{REQUEST_FILENAME} !-f
@@ -40,9 +52,4 @@ Header set Cache-Control "max-age=3600, s-max-age=3600, public,  no-cache"
 <IfModule mod_deflate.c>
     # Compress HTML, CSS, JavaScript
     AddOutputFilterByType DEFLATE text/html text/css application/x-javascript application/javascript
-</IfModule>
-
-# Ensure .mjs files are served with the correct MIME type
-<IfModule mod_mime.c>
-    AddType application/javascript .mjs
 </IfModule>
