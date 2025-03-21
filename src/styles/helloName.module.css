@@ -22,10 +22,14 @@
 }
 
 .helloName::after {
-    content: "Hello, Welcome to the Page!";
+    content: "Welcome to the Page!";
     position: absolute;
-    font-size: 28px;
-    font-weight: bold;
+    top: 10px;
+    left: 10px;
+    font-size: 18px;
+    font-weight: normal;
+    color: #fff;
+    opacity: 0.9;
 }
 
 .helloName:hover {
@@ -40,3 +44,4 @@
     -ms-transform: translate(-50%, -50%) !important;
     transform: translate(-50%, -50%) !important;
 }
+
